@@ -9,9 +9,8 @@ import {
 import Input from "../../components/Input/Input";
 import InputPassword from "../../components/InputPassword/InputPassword";
 import ButtonText from "../../components/Buttons/ButtonText";
-import Avatar from "../../components/Avatar/Avatar";
 
-const RegistrationScreen = () => {
+const LoginScreen = () => {
   return (
     <View style={styles.container}>
       <KeyboardAvoidingView
@@ -19,27 +18,25 @@ const RegistrationScreen = () => {
         keyboardVerticalOffset={-175}
       >
         <View style={styles.content}>
-          <Avatar style={styles.avatarReg} />
-
           <View style={styles.form}>
-            <Text style={styles.titleText}>Registration</Text>
-            <Input style={styles.inputText} placeholder="Login" />
+            <Text style={styles.titleText}>Sign In</Text>
+
             <Input
               style={styles.inputText}
               placeholder="Email address"
               keyboardType="email-address"
             />
             <InputPassword style={styles.inputPass} placeholder="Password" />
-            <ButtonText>Sign Up</ButtonText>
+            <ButtonText>Sign In</ButtonText>
           </View>
 
           <View style={styles.toggleWrapper}>
-            <Text style={styles.toggleText}>Have an account?</Text>
+            <Text style={styles.toggleText}>Don't have an account?</Text>
             <ButtonText
               style={styles.toggleBtn}
               textStyle={styles.toggleBtnText}
             >
-              Sign In
+              Sign Up
             </ButtonText>
           </View>
         </View>
@@ -57,7 +54,7 @@ const styles = StyleSheet.create({
     fontFamily: "Roboto-Regular",
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
-    paddingTop: 92,
+    paddingTop: 32,
     paddingBottom: 64,
     justifyContent: "flex-end",
     backgroundColor: "#fff",
@@ -107,4 +104,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default RegistrationScreen;
+export default LoginScreen;

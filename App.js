@@ -5,8 +5,13 @@ import {
   View,
   Keyboard,
   TouchableWithoutFeedback,
+  ImageBackground,
 } from "react-native";
 import RegistrationScreen from "./Screens/RegistrationScreen/RegistrationScreen";
+import LoginScreen from "./Screens/LoginScreen/LoginScreen";
+import PostsScreen from "./Screens/PostsScreen/PostsScreen";
+import BgImage from "./assets/image/photo-bg.jpeg";
+import User from "./components/User/User";
 
 export default function App() {
   const [isFontLoaded] = useFonts({
@@ -22,7 +27,16 @@ export default function App() {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.container}>
-        <RegistrationScreen />
+        <ImageBackground
+          source={BgImage}
+          resizeMode="cover"
+          style={styles.bgImage}
+        >
+          {/* <RegistrationScreen /> */}
+          {/* <User userName="Natali Romanova" userEmail="email@example.com" /> */}
+          {/* <LoginScreen /> */}
+          <PostsScreen />
+        </ImageBackground>
       </View>
     </TouchableWithoutFeedback>
   );
@@ -32,5 +46,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#ffffff",
+  },
+  bgImage: {
+    flex: 1,
   },
 });
