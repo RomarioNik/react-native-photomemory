@@ -1,27 +1,15 @@
 import React from "react";
-import Svg, { Circle, Path } from "react-native-svg";
 import { StyleSheet, View } from "react-native";
+// components
 import ButtonIcon from "../Buttons/ButtonIcon";
+// icons
+import IconPlus from "../Icons/IconPlus/IconPlus";
 
 const Avatar = ({ style, ...props }) => {
   return (
     <View style={[styles.avatar, style]} {...props}>
       <ButtonIcon style={styles.btnAvatar}>
-        <Svg
-          style={styles.svg}
-          xmlns="http://www.w3.org/2000/svg"
-          width={25}
-          height={25}
-          fill="none"
-        >
-          <Circle cx={12.5} cy={12.5} r={12} fill="#fff" stroke="#FF6C00" />
-          <Path
-            fill="#FF6C00"
-            fillRule="evenodd"
-            d="M13 6h-1v6H6v1h6v6h1v-6h6v-1h-6V6Z"
-            clipRule="evenodd"
-          />
-        </Svg>
+        <IconPlus style={styles.iconPlus} width={14} height={14} />
       </ButtonIcon>
     </View>
   );
@@ -46,8 +34,9 @@ const styles = StyleSheet.create({
     borderRadius: 100,
     borderWidth: 1,
     borderColor: "#FF6C00",
+    backgroundColor: "transparent",
   },
-  svg: {
+  iconPlus: {
     stroke: "#FF6C00",
     fill: "#ffffff",
   },

@@ -7,11 +7,11 @@ import {
   TouchableWithoutFeedback,
   ImageBackground,
 } from "react-native";
+// components
 import RegistrationScreen from "./Screens/RegistrationScreen/RegistrationScreen";
 import LoginScreen from "./Screens/LoginScreen/LoginScreen";
 import PostsScreen from "./Screens/PostsScreen/PostsScreen";
 import BgImage from "./assets/image/photo-bg.jpeg";
-import User from "./components/User/User";
 
 export default function App() {
   const [isFontLoaded] = useFonts({
@@ -32,10 +32,9 @@ export default function App() {
           resizeMode="cover"
           style={styles.bgImage}
         >
-          {/* <RegistrationScreen /> */}
-          {/* <User userName="Natali Romanova" userEmail="email@example.com" /> */}
+          <RegistrationScreen />
           {/* <LoginScreen /> */}
-          <PostsScreen />
+          {/* <PostsScreen /> */}
         </ImageBackground>
       </View>
     </TouchableWithoutFeedback>

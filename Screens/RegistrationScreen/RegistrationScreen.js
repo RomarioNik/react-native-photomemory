@@ -6,6 +6,7 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from "react-native";
+// components
 import Input from "../../components/Input/Input";
 import InputPassword from "../../components/InputPassword/InputPassword";
 import ButtonText from "../../components/Buttons/ButtonText";

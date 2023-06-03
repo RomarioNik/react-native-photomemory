@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
+// components
 import Input from "../Input/Input";
 import ButtonText from "../Buttons/ButtonText";
 

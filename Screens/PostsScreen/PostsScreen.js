@@ -1,156 +1,51 @@
 import React from "react";
-import { StyleSheet, View, Text, FlatList } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
+// components
 import User from "../../components/User/User";
-import userPhoto from "../../assets/image/user-avatar.jpeg";
 import ButtonIcon from "../../components/Buttons/ButtonIcon";
-import Svg, { Path } from "react-native-svg";
-
-const userData = [
-  {
-    id: "1",
-    userPhoto: userPhoto,
-    userName: "Natali Romanova",
-    userEmail: "email@example.com",
-  },
-  {
-    id: "2",
-    userPhoto: userPhoto,
-    userName: "Natali Romanova",
-    userEmail: "email@example.com",
-  },
-  {
-    id: "3",
-    userPhoto: userPhoto,
-    userName: "Natali Romanova",
-    userEmail: "email@example.com",
-  },
-];
+// image
+import userPhoto from "../../assets/image/user-avatar.jpeg";
+// icons
+import IconArrowLeft from "../../components/Icons/IconArrowLeft/IconArrowLeft";
+import IconLogOut from "../../components/Icons/IconLogOut/IconLogOut";
+import IconGallery from "../../components/Icons/IconGallery/IconGallery";
+import IconPlus from "../../components/Icons/IconPlus/IconPlus";
+import IconProfile from "../../components/Icons/IconProfile/IconProfile";
 
 const PostsScreen = () => {
   return (
     <View style={styles.content}>
       <View style={styles.header}>
         <View style={styles.btnWrapperHeader}>
-          <ButtonIcon style={styles.btnBack}>
-            <Svg
-              xmlns="http://www.w3.org/2000/svg"
-              width={24}
-              height={24}
-              fill="none"
-            >
-              <Path
-                stroke="#212121"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeOpacity={0.8}
-                d="M20 12H4m6 6-6-6 6-6"
-              />
-            </Svg>
-          </ButtonIcon>
+          {/* <ButtonIcon style={styles.btnBack}>
+            <IconArrowLeft style={styles.btnArrowLeft} width={24} height={24} />
+          </ButtonIcon> */}
           <Text>Publications</Text>
           <ButtonIcon style={styles.btnLogOutHeader}>
-            <Svg
-              xmlns="http://www.w3.org/2000/svg"
-              width={24}
-              height={24}
-              fill="none"
-            >
-              <Path
-                stroke="#BDBDBD"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M10 22H5a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h5m7 14 4-4-4-4m4 4H9"
-              />
-            </Svg>
+            <IconLogOut style={styles.btnIconLogOut} width={24} height={24} />
           </ButtonIcon>
         </View>
       </View>
 
       <View style={styles.main}>
-        <FlatList
-          data={userData}
-          renderItem={(item) => (
-            <User
-              userPhoto={item.userPhoto}
-              userName={item.userName}
-              userEmail={item.userEmail}
-            />
-          )}
-          keyExtractor={(item) => item.id}
-        />
-        {/* {userData.map(({ id, userPhoto, userName, userEmail }) => (
-          <User
-            key={id}
-            userPhoto={userPhoto}
-            userName={userName}
-            userEmail={userEmail}
-          />
-        ))} */}
-        {/* <User
+        <User
+          style={styles.user}
           userPhoto={userPhoto}
           userName="Natali Romanova"
           userEmail="email@example.com"
-        /> */}
+        />
       </View>
 
       <View style={styles.footer}>
         <View style={styles.btnWrapperFooter}>
           <ButtonIcon style={styles.btnGallery}>
-            <Svg
-              xmlns="http://www.w3.org/2000/svg"
-              width={24}
-              height={24}
-              fill="none"
-            >
-              <Path fill="#fff" d="M0 0h24v24H0z" />
-              <Path
-                stroke="#212121"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeOpacity={0.8}
-                d="M3 3h7v7H3V3Zm11 0h7v7h-7V3Zm0 11h7v7h-7v-7ZM3 14h7v7H3v-7Z"
-                clipRule="evenodd"
-              />
-            </Svg>
+            <IconGallery style={styles.btnIconGallery} width={40} height={40} />
           </ButtonIcon>
           <ButtonIcon style={styles.btnAdd}>
-            <Svg
-              xmlns="http://www.w3.org/2000/svg"
-              width={14}
-              height={14}
-              fill="none"
-            >
-              <Path
-                fill="#fff"
-                fillRule="evenodd"
-                d="M7.5.5h-1v6h-6v1h6v6h1v-6h6v-1h-6v-6Z"
-                clipRule="evenodd"
-              />
-            </Svg>
+            <IconPlus style={styles.btnIconAdd} width={14} height={14} />
           </ButtonIcon>
           <ButtonIcon style={styles.btnProfile}>
-            <Svg
-              xmlns="http://www.w3.org/2000/svg"
-              width={24}
-              height={24}
-              fill="none"
-            >
-              <Path
-                stroke="#212121"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeOpacity={0.8}
-                d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"
-              />
-              <Path
-                stroke="#212121"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeOpacity={0.8}
-                d="M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8Z"
-                clipRule="evenodd"
-              />
-            </Svg>
+            <IconProfile style={styles.btnIconProfile} width={40} height={40} />
           </ButtonIcon>
         </View>
       </View>
@@ -175,50 +70,73 @@ const styles = StyleSheet.create({
     height: 44,
     width: "100%",
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "center",
     alignItems: "center",
   },
   btnBack: {
+    position: "absolute",
+    top: 12,
+    left: 0,
     height: "auto",
     backgroundColor: "transparent",
+  },
+  btnArrowLeft: {
+    stroke: "#212121",
   },
   titleHeader: {
     height: "auto",
   },
   btnLogOutHeader: {
+    position: "absolute",
+    top: 12,
+    right: 0,
     height: "auto",
     backgroundColor: "transparent",
+  },
+  btnIconLogOut: {
+    stroke: "#BDBDBD",
   },
   main: {
     flexGrow: 1,
     paddingHorizontal: 16,
     paddingVertical: 32,
-    // backgroundColor: "red",
-    borderBottomColor: "#E8E8E8",
+  },
+  user: {
+    marginBottom: 32,
   },
   footer: {
     height: 84,
     paddingTop: 8,
     alignItems: "center",
+    borderTopWidth: 1,
     borderTopColor: "#E8E8E8",
-    // backgroundColor: "yellow",
   },
   btnWrapperFooter: {
     height: 40,
     flexDirection: "row",
+    alignItems: "center",
     gap: 32,
   },
   btnGallery: {
     height: "auto",
     backgroundColor: "transparent",
   },
+  btnIconGallery: {
+    stroke: "#212121",
+  },
   btnAdd: {
     width: 70,
-    height: "auto",
+    height: 40,
+  },
+  btnIconAdd: {
+    fill: "#ffffff",
   },
   btnProfile: {
     height: "auto",
     backgroundColor: "transparent",
+  },
+  btnIconProfile: {
+    stroke: "#212121",
   },
 });
 
