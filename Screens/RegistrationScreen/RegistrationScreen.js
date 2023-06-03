@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
   View,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 // components
 import Input from "../../components/Input/Input";
@@ -13,6 +14,19 @@ import ButtonText from "../../components/Buttons/ButtonText";
 import Avatar from "../../components/Avatar/Avatar";
 
 const RegistrationScreen = () => {
+  const [login, setLogin] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const onRegistartion = () => {
+    Alert.alert(
+      `Registration user\n login: ${login}\n email: ${email}\n password: ${password}`
+    );
+    console.log(
+      `Registration user\n login: ${login}\n email: ${email}\n password: ${password}`
+    );
+  };
+
   return (
     <View style={styles.container}>
       <KeyboardAvoidingView
@@ -24,14 +38,26 @@ const RegistrationScreen = () => {
 
           <View style={styles.form}>
             <Text style={styles.titleText}>Registration</Text>
-            <Input style={styles.inputText} placeholder="Login" />
+            <Input
+              style={styles.inputText}
+              placeholder="Login"
+              onChangeText={setLogin}
+              value={login}
+            />
             <Input
               style={styles.inputText}
               placeholder="Email address"
               keyboardType="email-address"
+              onChangeText={setEmail}
+              value={email}
             />
-            <InputPassword style={styles.inputPass} placeholder="Password" />
-            <ButtonText>Sign Up</ButtonText>
+            <InputPassword
+              style={styles.inputPass}
+              placeholder="Password"
+              onChangeText={setPassword}
+              value={password}
+            />
+            <ButtonText onPress={onRegistartion}>Sign Up</ButtonText>
           </View>
 
           <View style={styles.toggleWrapper}>

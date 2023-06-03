@@ -32,8 +32,8 @@ export default function App() {
           resizeMode="cover"
           style={styles.bgImage}
         >
-          <RegistrationScreen />
-          {/* <LoginScreen /> */}
+          {/* <RegistrationScreen /> */}
+          <LoginScreen />
           {/* <PostsScreen /> */}
         </ImageBackground>
       </View>

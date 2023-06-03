@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
   View,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 // components
 import Input from "../../components/Input/Input";
@@ -12,6 +13,13 @@ import InputPassword from "../../components/InputPassword/InputPassword";
 import ButtonText from "../../components/Buttons/ButtonText";
 
 const LoginScreen = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const onLogin = () => {
+    Alert.alert(`Registration user\n email: ${email}\n password: ${password}`);
+  };
+
   return (
     <View style={styles.container}>
       <KeyboardAvoidingView
@@ -26,9 +34,16 @@ const LoginScreen = () => {
               style={styles.inputText}
               placeholder="Email address"
               keyboardType="email-address"
+              onChangeText={setEmail}
+              value={email}
             />
-            <InputPassword style={styles.inputPass} placeholder="Password" />
-            <ButtonText>Sign In</ButtonText>
+            <InputPassword
+              style={styles.inputPass}
+              placeholder="Password"
+              onChangeText={setPassword}
+              value={password}
+            />
+            <ButtonText onPress={onLogin}>Sign In</ButtonText>
           </View>
 
           <View style={styles.toggleWrapper}>
