@@ -1,17 +1,17 @@
 import React from "react";
-import { useFonts } from "expo-font";
+// navigation
+import { NavigationContainer } from "@react-navigation/native";
 import {
-  StyleSheet,
-  View,
-  Keyboard,
-  TouchableWithoutFeedback,
-  ImageBackground,
-} from "react-native";
+  createStackNavigator,
+  CardStyleInterpolators,
+} from "@react-navigation/stack";
+import "react-native-gesture-handler";
+// fonts
+import { useFonts } from "expo-font";
 // components
+import HomeScreen from "./Screens/HomeScreen/HomeScreen";
 import RegistrationScreen from "./Screens/RegistrationScreen/RegistrationScreen";
 import LoginScreen from "./Screens/LoginScreen/LoginScreen";
-import PostsScreen from "./Screens/PostsScreen/PostsScreen";
-import BgImage from "./assets/image/photo-bg.jpeg";
 
 export default function App() {
   const [isFontLoaded] = useFonts({
@@ -20,33 +20,40 @@ export default function App() {
     "Roboto-Regular": require("./assets/fonts/Roboto-Regular.ttf"),
   });
 
+  const MainStack = createStackNavigator();
+
+  const options = {
+    headerShown: false,
+  };
+
   if (!isFontLoaded) {
     return null;
   }
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
-        <ImageBackground
-          source={BgImage}
-          resizeMode="cover"
-          style={styles.bgImage}
-        >
-          {/* <RegistrationScreen /> */}
-          <LoginScreen />
-          {/* <PostsScreen /> */}
-        </ImageBackground>
-      </View>
-    </TouchableWithoutFeedback>
+    <NavigationContainer>
+      <MainStack.Navigator
+        initialRouteName="Login"
+        screenOptions={{
+          cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
+        }}
+      >
+        <MainStack.Screen
+          name="Home"
+          component={HomeScreen}
+          options={options}
+        />
+        <MainStack.Screen
+          name="Login"
+          component={LoginScreen}
+          options={options}
+        />
+        <MainStack.Screen
+          name="Registration"
+          component={RegistrationScreen}
+          options={options}
+        />
+      </MainStack.Navigator>
+    </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#ffffff",
-  },
-  bgImage: {
-    flex: 1,
-  },
-});

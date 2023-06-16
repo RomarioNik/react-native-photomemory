@@ -1,15 +1,34 @@
 import React from "react";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, ImageBackground } from "react-native";
 // components
 import ButtonIcon from "../Buttons/ButtonIcon";
 // icons
 import IconPlus from "../Icons/IconPlus/IconPlus";
 
-const Avatar = ({ style, ...props }) => {
+const Avatar = ({ style, avatarSourse, ...props }) => {
   return (
     <View style={[styles.avatar, style]} {...props}>
-      <ButtonIcon style={styles.btnAvatar}>
-        <IconPlus style={styles.iconPlus} width={14} height={14} />
+      <ImageBackground
+        style={styles.ava}
+        resizeMode="cover"
+        source={avatarSourse}
+      ></ImageBackground>
+
+      <ButtonIcon
+        style={[
+          styles.btnAvatar,
+          { borderColor: avatarSourse ? "#BDBDBD" : "#FF6C00" },
+          { backgroundColor: avatarSourse ? "#ffffff" : "transparent" },
+        ]}
+      >
+        <IconPlus
+          style={[
+            styles.iconPlus,
+            { stroke: avatarSourse ? "#BDBDBD" : "#FF6C00" },
+          ]}
+          width={14}
+          height={14}
+        />
       </ButtonIcon>
     </View>
   );
@@ -21,6 +40,12 @@ const styles = StyleSheet.create({
     height: 120,
     borderRadius: 16,
     backgroundColor: "#F6F6F6",
+  },
+  ava: {
+    width: "100%",
+    height: "100%",
+    borderRadius: 16,
+    overflow: "hidden",
   },
   btnAvatar: {
     position: "absolute",
@@ -37,8 +62,8 @@ const styles = StyleSheet.create({
     backgroundColor: "transparent",
   },
   iconPlus: {
-    stroke: "#FF6C00",
-    fill: "#ffffff",
+    // stroke: "#FF6C00",
+    // fill: "#ffffff",
   },
 });
 

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigation } from "@react-navigation/native";
 import {
   StyleSheet,
   Text,
@@ -6,8 +7,11 @@ import {
   KeyboardAvoidingView,
   Platform,
   Alert,
+  TouchableWithoutFeedback,
+  Keyboard,
 } from "react-native";
 // components
+import Background from "../../components/Background/Background";
 import Input from "../../components/Input/Input";
 import InputPassword from "../../components/InputPassword/InputPassword";
 import ButtonText from "../../components/Buttons/ButtonText";
@@ -16,53 +20,69 @@ const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const navigation = useNavigation();
+
   const onLogin = () => {
-    Alert.alert(`Registration user\n email: ${email}\n password: ${password}`);
+    // Alert.alert(`Registration user\n email: ${email}\n password: ${password}`);
+    setEmail("");
+    setPassword("");
+    // navigation.navigate("Home", { screen: "HomeScreen" });
+    navigation.navigate("Home");
   };
 
   return (
-    <View style={styles.container}>
-      <KeyboardAvoidingView
-        behavior={Platform.OS == "ios" ? "padding" : "padding"}
-        keyboardVerticalOffset={-175}
-      >
-        <View style={styles.content}>
-          <View style={styles.form}>
-            <Text style={styles.titleText}>Sign In</Text>
-
-            <Input
-              style={styles.inputText}
-              placeholder="Email address"
-              keyboardType="email-address"
-              onChangeText={setEmail}
-              value={email}
-            />
-            <InputPassword
-              style={styles.inputPass}
-              placeholder="Password"
-              onChangeText={setPassword}
-              value={password}
-            />
-            <ButtonText onPress={onLogin}>Sign In</ButtonText>
-          </View>
-
-          <View style={styles.toggleWrapper}>
-            <Text style={styles.toggleText}>Don't have an account?</Text>
-            <ButtonText
-              style={styles.toggleBtn}
-              textStyle={styles.toggleBtnText}
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.mainContainer}>
+        <Background>
+          <View style={styles.wrapper}>
+            <KeyboardAvoidingView
+              behavior={Platform.OS == "ios" ? "padding" : "height"}
+              keyboardVerticalOffset={-175}
             >
-              Sign Up
-            </ButtonText>
+              <View style={styles.content}>
+                <View style={styles.form}>
+                  <Text style={styles.titleText}>Sign In</Text>
+
+                  <Input
+                    style={styles.inputText}
+                    placeholder="Email address"
+                    keyboardType="email-address"
+                    onChangeText={setEmail}
+                    value={email}
+                  />
+                  <InputPassword
+                    style={styles.inputPass}
+                    placeholder="Password"
+                    onChangeText={setPassword}
+                    value={password}
+                  />
+                  <ButtonText onPress={onLogin}>Sign In</ButtonText>
+                </View>
+
+                <View style={styles.toggleWrapper}>
+                  <Text style={styles.toggleText}>Don't have an account?</Text>
+                  <ButtonText
+                    style={styles.toggleBtn}
+                    textStyle={styles.toggleBtnText}
+                    onPress={() => navigation.navigate("Registration")}
+                  >
+                    Sign Up
+                  </ButtonText>
+                </View>
+              </View>
+            </KeyboardAvoidingView>
           </View>
-        </View>
-      </KeyboardAvoidingView>
-    </View>
+        </Background>
+      </View>
+    </TouchableWithoutFeedback>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  mainContainer: {
+    flex: 1,
+  },
+  wrapper: {
     flex: 1,
     justifyContent: "flex-end",
   },
@@ -71,7 +91,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 24,
     borderTopRightRadius: 24,
     paddingTop: 32,
-    paddingBottom: 64,
+    paddingBottom: 144,
     justifyContent: "flex-end",
     backgroundColor: "#fff",
   },
