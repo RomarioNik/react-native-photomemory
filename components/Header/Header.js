@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
-import { useNavigation, CommonActions } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 // components
 import IconArrowLeft from "../Icons/IconArrowLeft/IconArrowLeft";
 import IconLogOut from "../Icons/IconLogOut/IconLogOut";
@@ -8,6 +8,8 @@ import ButtonIcon from "../Buttons/ButtonIcon";
 
 const Header = ({ route }) => {
   const navigation = useNavigation();
+
+  // console.log(route.name);
 
   const titleHeader = (name) => {
     switch (name) {
@@ -17,15 +19,19 @@ const Header = ({ route }) => {
         return "Create post";
       case "Comments":
         return "Comments";
+      case "Map":
+        return "Map";
       default:
         return "Profile";
     }
   };
 
   const isIconShow =
-    route.name === "Create" || route.name === "Comments" ? true : false;
-  console.log(route.name);
-  console.log(route);
+    route.name === "Create" || route.name === "Comments" || route.name === "Map"
+      ? true
+      : false;
+  // console.log(route.name);
+  // console.log(route);
   // console.log(navigation.dispatch(CommonActions.goBack()));
   return (
     <View style={styles.header}>

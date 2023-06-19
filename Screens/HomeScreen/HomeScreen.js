@@ -6,6 +6,7 @@ import PostsScreen from "../PostsScreen/PostsScreen";
 import CreatePostsScreen from "../CreatePostsScreen/CreatePostsScreen";
 import ProfileScreen from "../ProfileScreen/ProfileScreen";
 import CommentsScreen from "../CommentsScreen/CommentsScreen";
+import MapScreen from "../MapScreen/MapScreen";
 // components
 import ButtonIcon from "../../components/Buttons/ButtonIcon";
 import Header from "../../components/Header/Header";
@@ -56,6 +57,7 @@ const HomeScreen = () => {
         name="Create"
         component={CreatePostsScreen}
         options={{
+          unmountOnBlur: true,
           header: ({ route }) => <Header route={route} />,
           tabBarStyle: { display: "none" },
           tabBarButton: (props) => (
@@ -101,6 +103,18 @@ const HomeScreen = () => {
             display: "none",
           },
           tabBarAccessibilityLabel: "Comments",
+        }}
+      />
+      <Tabs.Screen
+        name="Map"
+        component={MapScreen}
+        options={{
+          header: ({ route }) => <Header route={route} />,
+          tabBarStyle: { display: "none" },
+          tabBarItemStyle: {
+            display: "none",
+          },
+          tabBarAccessibilityLabel: "Map",
         }}
       />
     </Tabs.Navigator>

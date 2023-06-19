@@ -1,10 +1,17 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
+import { useNavigation } from "@react-navigation/native";
+import { Camera, CameraType } from "expo-camera";
+import * as MediaLibrary from "expo-media-library";
+import * as Location from "expo-location";
 import {
   StyleSheet,
   View,
   Text,
+  Image,
   TouchableWithoutFeedback,
   Keyboard,
+  TouchableOpacity,
+  Alert,
 } from "react-native";
 // components
 import ButtonIcon from "../../components/Buttons/ButtonIcon";
@@ -16,30 +23,154 @@ import IconMap from "../../components/Icons/IconMap/IconMap";
 import IconTrash from "../../components/Icons/IconTrash/IconTrash";
 
 const CreatePostsScreen = () => {
+  // camera state
+  const [hasPermission, setHasPermission] = useState(null);
+  const [cameraRef, setCameraRef] = useState(null);
+  const [type, setType] = useState(CameraType.back);
+  const [photo, setPhoto] = useState(null);
+  const [photoId, setPhotoId] = useState(null);
+  // input state
+  const [photoName, setPhotoName] = useState("");
+  const [photoNameLocation, setPhotoNameLocation] = useState("");
+  // location state
+  const [location, setLocation] = useState(null);
+
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      await MediaLibrary.requestPermissionsAsync();
+
+      setHasPermission(status === "granted");
+    })();
+  }, []);
+
+  const getPictureLocation = async () => {
+    let location = await Location.getCurrentPositionAsync({});
+    const coords = {
+      latitude: location.coords.latitude,
+      longitude: location.coords.longitude,
+    };
+    setLocation(coords);
+  };
+
+  const handleTakePicture = async () => {
+    if (cameraRef) {
+      const { uri } = await cameraRef.takePictureAsync();
+      const { id } = await MediaLibrary.createAssetAsync(uri);
+      setPhoto(uri);
+      setPhotoId(id);
+      getPictureLocation();
+    }
+  };
+
+  const toggleCameraType = () => {
+    setType((current) =>
+      current === CameraType.back ? CameraType.front : CameraType.back
+    );
+  };
+
+  const handleClearNewPhoto = () => {
+    Alert.alert("Delete photo", "Are you sure?", [
+      {
+        text: "Cancel",
+        onPress: () => {
+          return;
+        },
+        style: "cancel",
+      },
+      {
+        text: "OK",
+        onPress: () => {
+          setPhoto(null);
+          MediaLibrary.deleteAssetsAsync(photoId);
+        },
+      },
+    ]);
+  };
+
+  const handleClickPublish = () => {
+    navigation.navigate("HomeTabs", {
+      photo,
+      photoName,
+      photoNameLocation,
+      photoLocation: location,
+    });
+    setPhoto(null);
+    setPhotoName("");
+    setPhotoNameLocation("");
+  };
+
+  if (hasPermission === null) {
+    return <View />;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
+
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <View style={styles.wrapper}>
         <View style={styles.content}>
           <View style={styles.postPhoto}>
-            <ButtonIcon style={styles.btnChoosePhoto}>
-              <IconCamera width={24} height={24} />
-            </ButtonIcon>
+            <Camera style={styles.camera} type={type} ref={setCameraRef}>
+              <TouchableOpacity
+                style={styles.btnToggleCamera}
+                onPress={toggleCameraType}
+              >
+                <ButtonIcon
+                  style={styles.btnChoosePhoto}
+                  onPress={handleTakePicture}
+                >
+                  <IconCamera width={24} height={24} />
+                </ButtonIcon>
+
+                {photo && (
+                  <View style={styles.thumb}>
+                    <Image
+                      style={styles.newPhoto}
+                      resizeMode="cover"
+                      source={{ uri: photo }}
+                    />
+                  </View>
+                )}
+              </TouchableOpacity>
+            </Camera>
           </View>
-          <Text style={styles.text}>Upload photo</Text>
-          <Input style={styles.inputName} placeholder="Photo name..." />
+          <ButtonText
+            style={styles.btnDeletePhoto}
+            textStyle={styles.text}
+            onPress={handleClearNewPhoto}
+          >
+            {photo === null ? "Create photo" : "Delete photo"}
+          </ButtonText>
+
+          <Input
+            style={styles.inputName}
+            placeholder="Photo name..."
+            value={photoName}
+            onChangeText={setPhotoName}
+          />
 
           <View style={styles.mapWrapper}>
-            <ButtonIcon style={styles.btnMapPin}>
+            <ButtonIcon
+              style={styles.btnMapPin}
+              onPress={() => navigation.navigate("Map")}
+            >
               <IconMap stroke="#BDBDBD" width={24} height={24} />
             </ButtonIcon>
             <Input
               style={{ ...styles.inputName, ...styles.inputPlace }}
               placeholder="Place..."
-              disabled
+              value={photoNameLocation}
+              onChangeText={setPhotoNameLocation}
             />
           </View>
 
-          <ButtonText style={styles.btnPublish}>Publish</ButtonText>
+          <ButtonText style={styles.btnPublish} onPress={handleClickPublish}>
+            Publish
+          </ButtonText>
         </View>
 
         <View style={styles.btnTrashWrapper}>
@@ -62,26 +193,44 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     backgroundColor: "#ffffff",
   },
-  content: {
-    // alignItems: ''
-    // flexDirection: "column",
-    // justifyContent: "space-between",
+  content: {},
+  camera: {
+    flex: 1,
   },
   postPhoto: {
     width: "100%",
     height: 240,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#F6F6F6",
     borderWidth: 1,
     borderColor: "#E8E8E8",
     borderRadius: 8,
+    overflow: "hidden",
+  },
+  btnToggleCamera: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   btnChoosePhoto: {
     width: 60,
     height: 60,
     borderRadius: 100,
     backgroundColor: "#ffffff",
+  },
+  thumb: {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+  },
+  newPhoto: {
+    width: "100%",
+    height: "100%",
+  },
+  btnDeletePhoto: {
+    width: 100,
+    height: 60,
+    backgroundColor: "transparent",
   },
   text: {
     marginTop: 8,

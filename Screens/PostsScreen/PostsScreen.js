@@ -1,14 +1,51 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet, View, FlatList } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 // components
 import User from "../../components/User/User";
 import Post from "../../components/Post/Post";
 // image
 import userPhoto from "../../assets/image/user-avatar.jpeg";
 // data
-import { posts } from "../../data/posts";
+// import { posts } from "../../data/posts";
 
-const PostsScreen = () => {
+const PostsScreen = ({ route }) => {
+  const [data, setData] = useState([]);
+  const navigation = useNavigation();
+
+  useEffect(() => {
+    if (route.params) {
+      const { photo, photoName, photoNameLocation, photoLocation } =
+        route.params;
+      const newPhoto = {
+        id: new Date(),
+        postName: photoName,
+        imgSource: photo,
+        commentsCount: "0",
+        likesCount: "0",
+        fullLocation: photoNameLocation,
+        country: "Ukraine",
+        location: photoLocation,
+      };
+
+      setData((prev) => [newPhoto, ...prev]);
+    }
+  }, [route]);
+
+  // console.log(route);
+  // console.log("===========================================");
+  // console.log(route.params?.photo);
+  // console.log(route.params?.photoName);
+  // console.log(route.params?.photoNameLocation);
+  // console.log(route.params?.photoLocation);
+
+  // route.params.photo;
+  // route.params.photoName;
+  // route.params.photoNameLocation;
+  // route.params.photoLocation;
+
+  // console.log("=== ", data);
+
   return (
     <View style={styles.content}>
       <View style={styles.main}>
@@ -21,7 +58,7 @@ const PostsScreen = () => {
         </View>
 
         <FlatList
-          data={posts}
+          data={data}
           renderItem={({ item }) => (
             <View style={styles.postWrapper}>
               <Post
@@ -31,7 +68,7 @@ const PostsScreen = () => {
                 commentsCount={item.commentsCount}
                 fullLocation={item.fullLocation}
                 colorText="#BDBDBD"
-                // colorIcon="#BDBDBD"
+                photoLocation={item?.location}
               />
             </View>
           )}
@@ -50,7 +87,8 @@ const styles = StyleSheet.create({
   main: {
     flexGrow: 1,
     paddingHorizontal: 16,
-    paddingVertical: 32,
+    paddingTop: 32,
+    paddingBottom: 160,
   },
   user: {
     marginBottom: 32,

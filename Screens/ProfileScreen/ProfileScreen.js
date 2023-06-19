@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, View, Text, FlatList } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 // components
@@ -14,6 +14,7 @@ import ava from "../../assets/image/user-avatar-120.jpeg";
 import { posts } from "../../data/posts";
 
 const ProfileScreen = () => {
+  const [data, setData] = useState(() => posts);
   const navigation = useNavigation();
 
   return (
@@ -33,7 +34,7 @@ const ProfileScreen = () => {
             <Text style={styles.authorName}>Nataly Romanova</Text>
             <View style={styles.postsList}>
               <FlatList
-                data={posts}
+                data={data}
                 renderItem={({ item }) => (
                   <View style={styles.postWrapper}>
                     <Post
@@ -42,7 +43,7 @@ const ProfileScreen = () => {
                       imgSource={item.imgSource}
                       commentsCount={item.commentsCount}
                       likesCount={item.likesCount}
-                      country={item.country}
+                      fullLocation={item.fullLocation}
                       colorText="#212121"
                       colorIcon="#FF6C00"
                     />
@@ -68,6 +69,7 @@ const styles = StyleSheet.create({
   content: {
     height: "82%",
     paddingTop: 94,
+    paddingBottom: 100,
     backgroundColor: "#ffffff",
     borderTopLeftRadius: 25,
     borderTopRightRadius: 25,

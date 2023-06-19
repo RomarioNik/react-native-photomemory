@@ -19,6 +19,7 @@ const Post = ({
   country,
   colorText,
   colorIcon,
+  photoLocation,
 }) => {
   const navigation = useNavigation();
 
@@ -30,10 +31,16 @@ const Post = ({
     // open post to edit
   };
 
+  // console.log("imgSource: ", imgSource);
+
   return (
     <View style={styles.post}>
       <View style={styles.thumb} onPress={() => handleClickEditPost(id)}>
-        <Image style={styles.img} resizeMode="cover" source={imgSource} />
+        <Image
+          style={styles.img}
+          resizeMode="cover"
+          source={{ uri: imgSource }}
+        />
       </View>
 
       <Text style={styles.textName}>{postName}</Text>
@@ -90,23 +97,6 @@ const Post = ({
             <View style={styles.location}>
               <IconMap
                 style={styles.iconLocation}
-                stroke={colorIcon ? colorIcon : "#BDBDBD"}
-                width={24}
-                height={24}
-              />
-              <ButtonText
-                style={styles.btnLocation}
-                textStyle={styles.btnLocationText}
-              >
-                {fullLocation}
-              </ButtonText>
-            </View>
-          )}
-
-          {country && (
-            <View style={styles.location}>
-              <IconMap
-                style={styles.iconLocation}
                 stroke="#BDBDBD"
                 width={24}
                 height={24}
@@ -114,8 +104,11 @@ const Post = ({
               <ButtonText
                 style={styles.btnLocation}
                 textStyle={styles.btnLocationText}
+                onPress={() =>
+                  navigation.navigate("Map", { location: photoLocation })
+                }
               >
-                {country}
+                {fullLocation}
               </ButtonText>
             </View>
           )}

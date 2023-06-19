@@ -21,8 +21,10 @@ import authorAvatar from "../../assets/image/user-avatar.jpeg";
 // icons
 import IconArrowLeft from "../../components/Icons/IconArrowLeft/IconArrowLeft";
 
-const CommentsScreen = () => {
+const CommentsScreen = ({ route }) => {
   const [comment, setComment] = useState("");
+
+  // console.log(route);
 
   const handleSubmitComment = () => {
     Alert.alert(`You send comment:\n ${comment}`);
