@@ -10,7 +10,6 @@ const MapScreen = () => {
   const {
     params: { location },
   } = useRoute();
-  console.log(location);
 
   useEffect(() => {
     (async () => {
