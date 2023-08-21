@@ -1,85 +1,108 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import {
   StyleSheet,
+  Text,
   View,
-  ScrollView,
   Image,
   FlatList,
-  Alert,
-  TouchableWithoutFeedback,
+  Pressable,
+  // TouchableWithoutFeedback,
   Keyboard,
   KeyboardAvoidingView,
 } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 // components
 import Comment from "../../components/Comment/Comment";
 import Input from "../../components/Input/Input";
 import ButtonIcon from "../../components/Buttons/ButtonIcon";
-// image
-import photo from "../../assets/image/photo-place-2.jpeg";
-import guestAvatar from "../../assets/image/guest-avatar.jpeg";
-import authorAvatar from "../../assets/image/user-avatar.jpeg";
+import { selectPostComments } from "../../redux/posts-selectors";
+import { addComment, getPostComments } from "../../redux/posts-operations";
+import { selectUserId } from "../../redux/auth-selectors";
 // icons
 import IconArrowLeft from "../../components/Icons/IconArrowLeft/IconArrowLeft";
 
 const CommentsScreen = ({ route }) => {
   const [comment, setComment] = useState("");
 
-  // console.log(route);
+  const postComments = useSelector(selectPostComments);
+  const owner = useSelector(selectUserId);
+
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
+  const flatlistRef = useRef();
+
+  const { id, imgSource } = route.params;
+
+  useEffect(() => {
+    if (isFocused) dispatch(getPostComments({ id }));
+  }, [isFocused]);
+
+  useEffect(() => {
+    if (postComments.length > 0) flatlistRef.current.scrollToEnd();
+  }, [postComments]);
 
   const handleSubmitComment = () => {
-    Alert.alert(`You send comment:\n ${comment}`);
+    if (comment.trim() === "") return;
+
+    dispatch(
+      addComment({
+        postId: id,
+        owner,
+        text: comment,
+      })
+    );
+
+    setComment("");
+    dispatch(getPostComments({ id }))
+      .unwrap()
+      .then(() => flatlistRef.current.scrollToEnd());
   };
 
-  const testArray = [
-    {
-      id: 1,
-      avatar: guestAvatar,
-      text: "Really love your most recent photo. I’ve been trying to capture the same thing for a few months and would love some tips!",
-      data: "09 червня, 2020 | 08:40",
-      authorPhoto: false,
-    },
-    {
-      id: 2,
-      avatar: authorAvatar,
-      text: "A fast 50mm like f1.8 would help with the bokeh. I’ve been using primes as they tend to get a bit sharper images.",
-      data: "09 червня, 2020 | 09:14",
-      authorPhoto: true,
-    },
-    {
-      id: 3,
-      avatar: guestAvatar,
-      text: "Thank you! That was very helpful!",
-      data: "09 червня, 2020 | 09:20",
-      authorPhoto: false,
-    },
-  ];
+  const EmptyListMessage = () => {
+    return <Text style={styles.emptyListStyle}>Nobody comment yet</Text>;
+  };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} style={styles.touch}>
+    <Pressable onPress={Keyboard.dismiss} style={styles.touch}>
       <View style={styles.container}>
         <KeyboardAvoidingView
           style={styles.wrapper}
           behavior={Platform.OS == "ios" ? "padding" : "height"}
-          keyboardVerticalOffset={-175}
+          keyboardVerticalOffset={-155}
         >
           <View style={styles.content}>
             <View style={styles.thumb}>
-              <Image style={styles.img} resizeMode="cover" source={photo} />
+              <Image
+                style={styles.img}
+                resizeMode="cover"
+                source={{ uri: imgSource }}
+              />
             </View>
 
-            <FlatList
-              data={testArray}
-              renderItem={({ item }) => (
-                <View style={styles.commentWrap}>
-                  <Comment
-                    avatar={item.avatar}
-                    text={item.text}
-                    data={item.data}
-                    authorPhoto={item.authorPhoto}
-                  />
-                </View>
-              )}
-            />
+            <View style={styles.commentsWrapper}>
+              <FlatList
+                data={postComments}
+                ref={flatlistRef}
+                renderItem={({ item, index }) => (
+                  <View
+                    style={[
+                      styles.commentWrap,
+                      postComments.length - 1 === index &&
+                        styles.commentWrapLastChild,
+                    ]}
+                  >
+                    <Comment
+                      owner={item.data.owner}
+                      text={item.data.text}
+                      date={item.data.timestamp?.seconds}
+                    />
+                  </View>
+                )}
+                keyExtractor={(item) => item.id}
+                ListEmptyComponent={EmptyListMessage}
+              />
+            </View>
           </View>
 
           <View style={styles.inputWrap}>
@@ -101,11 +124,14 @@ const CommentsScreen = ({ route }) => {
           </View>
         </KeyboardAvoidingView>
       </View>
-    </TouchableWithoutFeedback>
+    </Pressable>
   );
 };
 
 const styles = StyleSheet.create({
+  touch: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     paddingHorizontal: 16,
@@ -117,7 +143,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     gap: 24,
   },
-  content: {},
+  content: {
+    flex: 1,
+  },
   thumb: {
     maxWidth: "100%",
     maxHeight: 240,
@@ -128,8 +156,14 @@ const styles = StyleSheet.create({
     height: "100%",
     borderRadius: 8,
   },
+  commentsWrapper: {
+    flex: 1,
+  },
   commentWrap: {
     marginBottom: 24,
+  },
+  commentWrapLastChild: {
+    marginBottom: 0,
   },
   input: {
     height: 50,
@@ -146,6 +180,14 @@ const styles = StyleSheet.create({
   },
   iconArrowTop: {
     transform: [{ rotate: "90deg" }],
+  },
+  emptyListStyle: {
+    fontSize: 18,
+    fontWeight: "400",
+    fontSize: 14,
+    lineHeight: 12,
+    color: "#BDBDBD",
+    textAlign: "center",
   },
 });
 

@@ -20,6 +20,7 @@ const Tabs = createBottomTabNavigator();
 const HomeScreen = () => {
   return (
     <Tabs.Navigator
+      backBehavior="order"
       screenOptions={{
         tabBarShowLabel: false,
         tabBarStyle: {
@@ -85,12 +86,13 @@ const HomeScreen = () => {
         component={ProfileScreen}
         options={{
           headerShown: false,
+          header: ({ route }) => <Header route={route} />,
           tabBarButton: (props) => (
             <ButtonIcon style={styles.btnProfile} {...props}>
               <IconProfile stroke="#212121" width={40} height={40} />
             </ButtonIcon>
           ),
-          tabBarAccessibilityLabel: "Prifile",
+          tabBarAccessibilityLabel: "Profile",
         }}
       />
       <Tabs.Screen

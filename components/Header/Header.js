@@ -1,13 +1,17 @@
 import React from "react";
 import { StyleSheet, View, Text } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, CommonActions } from "@react-navigation/native";
 // components
 import IconArrowLeft from "../Icons/IconArrowLeft/IconArrowLeft";
 import IconLogOut from "../Icons/IconLogOut/IconLogOut";
 import ButtonIcon from "../Buttons/ButtonIcon";
+import { useDispatch } from "react-redux";
+import { logout } from "../../redux/auth-operations";
 
 const Header = ({ route }) => {
   const navigation = useNavigation();
+
+  const dispatch = useDispatch();
 
   // console.log(route.name);
 
@@ -30,15 +34,24 @@ const Header = ({ route }) => {
     route.name === "Create" || route.name === "Comments" || route.name === "Map"
       ? true
       : false;
-  // console.log(route.name);
-  // console.log(route);
+  console.log(route.name);
+  // console.log(navigation.goBack());
   // console.log(navigation.dispatch(CommonActions.goBack()));
+
+  const handlePressLogout = () => {
+    dispatch(logout())
+      .unwrap()
+      .then(() => navigation.navigate("Login"));
+  };
+
   return (
     <View style={styles.header}>
       <View style={styles.btnWrapperHeader}>
         {isIconShow && (
           <ButtonIcon
             style={styles.btnBack}
+            // onPress={() => navigation.goBack()}
+            // onPress={() => navigation.dispatch(CommonActions.goBack())}
             onPress={() => navigation.goBack()}
           >
             <IconArrowLeft style={styles.btnArrowLeft} width={24} height={24} />
@@ -49,7 +62,7 @@ const Header = ({ route }) => {
         {!isIconShow && (
           <ButtonIcon
             style={styles.btnLogOutHeader}
-            onPress={() => navigation.navigate("Login")}
+            onPress={handlePressLogout}
           >
             <IconLogOut style={styles.btnIconLogOut} width={24} height={24} />
           </ButtonIcon>
@@ -86,7 +99,7 @@ const styles = StyleSheet.create({
     stroke: "#212121",
   },
   titleHeader: {
-    fontWeight: 500,
+    fontWeight: "500",
     fontSize: 17,
     lineHeight: 22,
   },

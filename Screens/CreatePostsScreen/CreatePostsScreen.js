@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import { Camera, CameraType } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
@@ -17,6 +18,8 @@ import {
 import ButtonIcon from "../../components/Buttons/ButtonIcon";
 import ButtonText from "../../components/Buttons/ButtonText";
 import Input from "../../components/Input/Input";
+import { addPost } from "../../redux/posts-operations";
+import { selectUserId } from "../../redux/auth-selectors";
 // icons
 import IconCamera from "../../components/Icons/IconCamera/IconCamera";
 import IconMap from "../../components/Icons/IconMap/IconMap";
@@ -35,7 +38,10 @@ const CreatePostsScreen = () => {
   // location state
   const [location, setLocation] = useState(null);
 
+  const owner = useSelector(selectUserId);
+
   const navigation = useNavigation();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     (async () => {
@@ -91,12 +97,19 @@ const CreatePostsScreen = () => {
   };
 
   const handleClickPublish = () => {
-    navigation.navigate("HomeTabs", {
-      photo,
-      photoName,
-      photoNameLocation,
-      photoLocation: location,
-    });
+    dispatch(
+      addPost({
+        owner,
+        postName: photoName,
+        imgSource: photo,
+        fullLocation: photoNameLocation,
+        location,
+        commentsCount: 0,
+        likesCount: 0,
+      })
+    )
+      .unwrap()
+      .then(() => navigation.navigate("HomeTabs"));
     setPhoto(null);
     setPhotoName("");
     setPhotoNameLocation("");
@@ -235,7 +248,7 @@ const styles = StyleSheet.create({
   text: {
     marginTop: 8,
     marginBottom: 32,
-    fontWeight: 400,
+    fontWeight: "400",
     fontSize: 16,
     lineHeight: 19,
     color: "#BDBDBD",

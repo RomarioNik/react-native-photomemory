@@ -15,19 +15,24 @@ import Background from "../../components/Background/Background";
 import Input from "../../components/Input/Input";
 import InputPassword from "../../components/InputPassword/InputPassword";
 import ButtonText from "../../components/Buttons/ButtonText";
+import { useDispatch } from "react-redux";
+import { login } from "../../redux/auth-operations";
 
 const LoginScreen = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  const dispatch = useDispatch();
+
   const navigation = useNavigation();
 
-  const onLogin = () => {
+  const handleSubmit = () => {
+    dispatch(login({email, password})).unwrap().then(() => navigation.navigate("Home"));
     // Alert.alert(`Registration user\n email: ${email}\n password: ${password}`);
-    setEmail("");
-    setPassword("");
+    // setEmail("");
+    // setPassword("");
     // navigation.navigate("Home", { screen: "HomeScreen" });
-    navigation.navigate("Home");
+    // navigation.navigate("Home");
   };
 
   return (
@@ -56,7 +61,7 @@ const LoginScreen = () => {
                     onChangeText={setPassword}
                     value={password}
                   />
-                  <ButtonText onPress={onLogin}>Sign In</ButtonText>
+                  <ButtonText onPress={handleSubmit}>Sign In</ButtonText>
                 </View>
 
                 <View style={styles.toggleWrapper}>

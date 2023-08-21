@@ -1,78 +1,61 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, View, FlatList } from "react-native";
-import { useNavigation } from "@react-navigation/native";
+import { useIsFocused } from "@react-navigation/native";
+import { useDispatch, useSelector } from "react-redux";
 // components
 import User from "../../components/User/User";
 import Post from "../../components/Post/Post";
-// image
-import userPhoto from "../../assets/image/user-avatar.jpeg";
-// data
-// import { posts } from "../../data/posts";
+import {
+  selectIsLoggedIn,
+  selectUserAvatarUrl,
+  selectUserEmail,
+  selectUserId,
+  selectUserName,
+} from "../../redux/auth-selectors";
+import { getUserPosts } from "../../redux/posts-operations";
+import { selectUserPosts } from "../../redux/posts-selectors";
 
-const PostsScreen = ({ route }) => {
-  const [data, setData] = useState([]);
-  const navigation = useNavigation();
+const PostsScreen = () => {
+  const avatar = useSelector(selectUserAvatarUrl);
+  const userName = useSelector(selectUserName);
+  const userEmail = useSelector(selectUserEmail);
+  const userPosts = useSelector(selectUserPosts);
+  const userIsLoggedIn = useSelector(selectIsLoggedIn);
+
+  const userId = useSelector(selectUserId);
+
+  const dispatch = useDispatch();
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    if (route.params) {
-      const { photo, photoName, photoNameLocation, photoLocation } =
-        route.params;
-      const newPhoto = {
-        id: new Date(),
-        postName: photoName,
-        imgSource: photo,
-        commentsCount: "0",
-        likesCount: "0",
-        fullLocation: photoNameLocation,
-        country: "Ukraine",
-        location: photoLocation,
-      };
-
-      setData((prev) => [newPhoto, ...prev]);
-    }
-  }, [route]);
-
-  // console.log(route);
-  // console.log("===========================================");
-  // console.log(route.params?.photo);
-  // console.log(route.params?.photoName);
-  // console.log(route.params?.photoNameLocation);
-  // console.log(route.params?.photoLocation);
-
-  // route.params.photo;
-  // route.params.photoName;
-  // route.params.photoNameLocation;
-  // route.params.photoLocation;
-
-  // console.log("=== ", data);
+    if (isFocused && userIsLoggedIn) dispatch(getUserPosts({ userId }));
+  }, [isFocused, userIsLoggedIn]);
 
   return (
     <View style={styles.content}>
       <View style={styles.main}>
         <View style={styles.user}>
-          <User
-            userPhoto={userPhoto}
-            userName="Natali Romanova"
-            userEmail="email@example.com"
-          />
+          <User userPhoto={avatar} userName={userName} userEmail={userEmail} />
         </View>
 
-        <FlatList
-          data={data}
-          renderItem={({ item }) => (
-            <View style={styles.postWrapper}>
-              <Post
-                id={item.id}
-                postName={item.postName}
-                imgSource={item.imgSource}
-                commentsCount={item.commentsCount}
-                fullLocation={item.fullLocation}
-                colorText="#BDBDBD"
-                photoLocation={item?.location}
-              />
-            </View>
-          )}
-        />
+        {userPosts && (
+          <FlatList
+            data={userPosts}
+            renderItem={({ item }) => (
+              <View style={styles.postWrapper}>
+                <Post
+                  id={item.id}
+                  postName={item.data.postName}
+                  imgSource={item.data.imgSource}
+                  commentsCount={item.data.commentsCount}
+                  fullLocation={item.data.fullLocation}
+                  colorText="#BDBDBD"
+                  photoLocation={item?.data.location}
+                />
+              </View>
+            )}
+          />
+        )}
       </View>
     </View>
   );

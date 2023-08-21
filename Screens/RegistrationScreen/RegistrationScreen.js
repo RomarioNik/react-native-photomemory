@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigation } from "@react-navigation/native";
 import {
   StyleSheet,
@@ -16,23 +17,36 @@ import Input from "../../components/Input/Input";
 import InputPassword from "../../components/InputPassword/InputPassword";
 import ButtonText from "../../components/Buttons/ButtonText";
 import Avatar from "../../components/Avatar/Avatar";
+import { register } from "../../redux/auth-operations";
 
 const RegistrationScreen = () => {
+  const [avatarUrl, setAvatarUrl] = useState(null);
   const [login, setLogin] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
   const navigation = useNavigation();
 
-  const onRegistartion = () => {
+  const dispatch = useDispatch();
+
+  const getAvatarUrl = (url) => {
+    setAvatarUrl(url);
+  };
+
+  const handleSubmit = () => {
+    console.log("dispatch", avatarUrl);
+    dispatch(register({ email, login, password, avatarUrl }))
+      .unwrap()
+      .then(() => navigation.navigate("Home"));
+
     // Alert.alert(
     //   `You registrated\n login: ${login}\n email: ${email}\n password: ${password}`
     // );
-    setLogin("");
-    setEmail("");
-    setPassword("");
+    // setLogin("");
+    // setEmail("");
+    // setPassword("");
 
-    navigation.navigate("Home");
+    // navigation.navigate("Home");
   };
 
   return (
@@ -45,7 +59,7 @@ const RegistrationScreen = () => {
               keyboardVerticalOffset={-105}
             >
               <View style={styles.content}>
-                <Avatar style={styles.avatarReg} />
+                <Avatar style={styles.avatarReg} getAvatarUrl={getAvatarUrl} />
                 <View style={styles.form}>
                   <Text style={styles.titleText}>Registration</Text>
                   <Input
@@ -67,7 +81,7 @@ const RegistrationScreen = () => {
                     onChangeText={setPassword}
                     value={password}
                   />
-                  <ButtonText onPress={onRegistartion}>Sign Up</ButtonText>
+                  <ButtonText onPress={handleSubmit}>Sign Up</ButtonText>
                 </View>
                 <View style={styles.toggleWrapper}>
                   <Text style={styles.toggleText}>Have an account?</Text>

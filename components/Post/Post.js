@@ -16,7 +16,6 @@ const Post = ({
   commentsCount,
   likesCount,
   fullLocation,
-  country,
   colorText,
   colorIcon,
   photoLocation,
@@ -24,14 +23,12 @@ const Post = ({
   const navigation = useNavigation();
 
   const handleClickComments = () => {
-    navigation.navigate("Comments");
+    navigation.navigate("Comments", { id, imgSource });
   };
 
   const handleClickEditPost = () => {
     // open post to edit
   };
-
-  // console.log("imgSource: ", imgSource);
 
   return (
     <View style={styles.post}>
@@ -47,7 +44,7 @@ const Post = ({
 
       <View style={styles.details}>
         <View style={styles.counterWrapper}>
-          {commentsCount && (
+          {commentsCount >= 0 && (
             <View style={styles.comments}>
               <ButtonIcon
                 style={styles.btnIconComments}
@@ -72,7 +69,7 @@ const Post = ({
             </View>
           )}
 
-          {likesCount && (
+          {likesCount >= 0 && (
             <View style={styles.likes}>
               <IconLike
                 style={styles.iconComments}
@@ -132,7 +129,7 @@ const styles = StyleSheet.create({
   },
   textName: {
     marginBottom: 8,
-    fontWeight: 500,
+    fontWeight: "500",
     fontSize: 16,
     lineHeight: 19,
     color: "#212121",
@@ -158,7 +155,7 @@ const styles = StyleSheet.create({
   },
   iconComments: {},
   commentsAmount: {
-    fontWeight: 400,
+    fontWeight: "400",
     fontSize: 16,
     lineHeight: 19,
   },

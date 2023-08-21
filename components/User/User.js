@@ -4,7 +4,11 @@ import { StyleSheet, View, Image, Text } from "react-native";
 const User = ({ userPhoto, userName, userEmail }) => {
   return (
     <View style={styles.container}>
-      <Image style={styles.img} resizeMode="cover" source={userPhoto} />
+      <Image
+        style={styles.img}
+        resizeMode="cover"
+        source={{ uri: userPhoto }}
+      />
 
       <View style={styles.description}>
         <Text style={styles.userName}>{userName}</Text>
